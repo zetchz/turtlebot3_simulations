@@ -24,11 +24,12 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 import xacro
 
-TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
+# TODO: re-enable model selection
+# TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
 
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    world_name = LaunchConfiguration('world_name', default='turtlebot3_world')
+    world_name = LaunchConfiguration('world_name', default='turtlebot3_house')
 
     launch_file_dir = os.path.join(get_package_share_directory('turtlebot3_ignition'), 'launch')
 
@@ -36,64 +37,65 @@ def generate_launch_description():
                      executable='static_transform_publisher',
                      name='static_transform_publisher',
                      output='log',
-                     arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0', 'base_scan', [TURTLEBOT3_MODEL, '/base_footprint/hls_lfcd_lds']],
+                     arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0', 'base_scan', ['burger', '/base_footprint/hls_lfcd_lds']],
                      parameters=[{'use_sim_time': use_sim_time}])
 
     # Set ignition resource path
-    ign_resource_path = SetEnvironmentVariable(
-        name='IGN_GAZEBO_RESOURCE_PATH',value=[
-        os.path.join(get_package_prefix('turtlebot3_description'), "share"),
-        ":" +
-        os.path.join(get_package_share_directory('turtlebot3_gazebo'), "models")])
+    # ign_resource_path = SetEnvironmentVariable(
+    #     name='GZ_SIM_RESOURCE_PATH',value=[
+    #     os.path.join(get_package_prefix('turtlebot3_description'), "share"),
+    #     ":" +
+    #     "home/malcom/garden_ws/src/turtlebot3_simulations/turtlebot3_ignition/models"])
+    # republish_cmd = Node(
+    #     package='turtlebot3_ignition',
+    #     executable='cmd_republisher')
 
-    republish_cmd = Node(
-        package='turtlebot3_ignition',
-        executable='cmd_republisher')
+    # This doesnt work yet. For some reason the gazebo plugin i
+    # ignition_spawn_entity = Node(
+    #     package='ros_ign_gazebo',
+    #     executable='create',
+    #     output='screen',
+    #     arguments=['-topic', 'robot_description',
+    #                '-name', TURTLEBOT3_MODEL,
+    #                '-allow_renaming', 'true',
+    #                '-x', '-2.0',
+    #                '-y', '-0.5',
+    #                '-z', '0.01'],
+    #     )
 
-    ignition_spawn_entity = Node(
-        package='ros_ign_gazebo',
-        executable='create',
-        output='screen',
-        arguments=['-topic', 'robot_description',
-                   '-name', TURTLEBOT3_MODEL,
-                   '-allow_renaming', 'true',
-                   '-x', '-2.0',
-                   '-y', '-0.5',
-                   '-z', '0.01'],
-        )
+    # TODO: Currently directly opening up world
+    # ignition_spawn_world = Node(
+    #     package='ros_ign_gazebo',
+    #     executable='create',
+    #     output='screen',
+    #     arguments=['-file', PathJoinSubstitution([
+    #                     get_package_share_directory('turtlebot3_ignition'),
+    #                     "models",
+    #                     world_name,
+    #                     "model.sdf"]),
+    #                '-allow_renaming', 'false'],
+    #     )
 
-    ignition_spawn_world = Node(
-        package='ros_ign_gazebo',
-        executable='create',
-        output='screen',
-        arguments=['-file', PathJoinSubstitution([
-                        get_package_share_directory('turtlebot3_gazebo'),
-                        "models",
-                        world_name,
-                        "model.sdf"]),
-                   '-allow_renaming', 'false'],
-        )
-
-    basic_world = os.path.join(get_package_share_directory('turtlebot3_ignition'), "worlds", "empty.sdf")
-
+    # basic_world = os.path.join(get_package_share_directory('turtlebot3_ignition'), "worlds" , "turtlebot3_house.world")
+    # print(basic_world)
     return LaunchDescription([
-        republish_cmd,
+        # republish_cmd,
         static_tf,
-        ign_resource_path,
-        ignition_spawn_world,
-        ignition_spawn_entity,
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [os.path.join(get_package_share_directory('ros_ign_gazebo'),
-                              'launch', 'ign_gazebo.launch.py')]),
-            launch_arguments=[('ign_args', [' -r -v 3 ' +
-                              basic_world
-                              + ' ' + ' --gui-config ' +
-                              os.path.join(
-                                get_package_share_directory('turtlebot3_ignition'),
-                                "gui", "gui.config"
-                              )
-                             ])]),
+        # ign_resource_path,
+        # ignition_spawn_world,
+        # ignition_spawn_entity,
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource(
+        #         [os.path.join(get_package_share_directory('ros_gz_sim'),
+        #                       'launch', 'gz_sim.launch.py')]),
+        #     launch_arguments=[('gz_args', [' -r -v 4 ' +
+        #                       basic_world
+        #                       + ' ' + ' --gui-config ' +
+        #                       os.path.join(
+        #                         get_package_share_directory('turtlebot3_ignition'),
+        #                         "gui", "gui.config"
+        #                       )
+        #                      ])]),
         DeclareLaunchArgument(
             'use_sim_time',
             default_value=use_sim_time,
@@ -114,8 +116,8 @@ def generate_launch_description():
             PythonLaunchDescriptionSource([launch_file_dir, '/control.launch.py']),
             launch_arguments={'use_sim_time': use_sim_time}.items(),
         ),
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([launch_file_dir, '/rviz.launch.py']),
-            launch_arguments={'use_sim_time': use_sim_time}.items(),
-        ),
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource([launch_file_dir, '/rviz.launch.py']),
+        #     launch_arguments={'use_sim_time': use_sim_time}.items(),
+        # ),
     ])

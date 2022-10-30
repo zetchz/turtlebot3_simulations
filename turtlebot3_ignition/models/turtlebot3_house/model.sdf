@@ -4155,7 +4155,7 @@
         </surface>
       </collision>
     </link>
-    <model name='Mailbox'>
+    <!-- <model name='Mailbox'>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -5417,7 +5417,7 @@
           </material>
         </visual>
       </link>
-    </model>
+    </model> -->
     <static>1</static>
     <allow_auto_disable>1</allow_auto_disable>
   </model>

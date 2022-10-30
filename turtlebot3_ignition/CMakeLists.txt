@@ -19,7 +19,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-install(DIRECTORY launch urdf config rviz gui worlds
+install(DIRECTORY launch urdf config rviz gui worlds models
   DESTINATION share/${PROJECT_NAME}
 )
 
