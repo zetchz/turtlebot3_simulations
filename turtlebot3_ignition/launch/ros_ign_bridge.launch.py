@@ -19,57 +19,24 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 
-    scan_bridge = Node(
+    bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
         arguments=[
-          '/lidar@sensor_msgs/msg/LaserScan@ignition.msgs.LaserScan',
+            '/lidar@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan',
+            '/imu@sensor_msgs/msg/Imu@gz.msgs.IMU',
+            '/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist',
+            '/model/turtlebot3_burger/pose@geometry_msgs/msg/TransformStamped@gz.msgs.Pose',
         ],
-        parameters=[{'use_sim_time': use_sim_time}],
+        # parameters=[{'use_sim_time': use_sim_time}],
         output='screen'
     )
-
-    # cmd_vel bridge
-    imu_bridge = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        arguments=[
-          '/imu@sensor_msgs/msg/Imu@ignition.msgs.IMU'
-        ],
-        parameters=[{'use_sim_time': use_sim_time}],
-        output='screen'
-    )
-
-    # cmd_vel bridge
-    cmd_vel_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
-                          name='cmd_vel_bridge',
-                          output='screen',
-                          parameters=[{
-                              'use_sim_time': use_sim_time
-                          }],
-                          arguments=[
-                              '/cmd_vel' + '@geometry_msgs/msg/Twist' + '[ignition.msgs.Twist',
-                          ])
-    # transform
-    tf_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
-                          name='transform_bridge',
-                          output='screen',
-                          parameters=[{
-                              'use_sim_time': use_sim_time
-                          }],
-                          arguments=[
-                              '/model/turtlebot3_burger/pose' + '@geometry_msgs/msg/TransformStamped' + '@gz.msgs.Pose',
-                          ])
 
     return LaunchDescription([
-        imu_bridge,
-        scan_bridge,
-        cmd_vel_bridge,
-        tf_bridge,
-        DeclareLaunchArgument(
-            'use_sim_time',
-            default_value='true',
-            description='Use simulation (Gazebo) clock if true'),
+        bridge,
+        # DeclareLaunchArgument(
+        #     'use_sim_time',
+        #     default_value='true',
+        #     description='Use simulation (Gazebo) clock if true'),
     ])
