@@ -22,13 +22,19 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 import xacro
 
-TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
+TURTLEBOT3_MODEL = 'burger'
+
 
 def generate_launch_description():
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    urdf_file_name = 'turtlebot3_' + TURTLEBOT3_MODEL + '.urdf'
+    # urdf_file_name = 'turtlebot3_' + TURTLEBOT3_MODEL + '.urdf'
+    # urdf = os.path.join(
+    #     get_package_share_directory('turtlebot3_ignition'),
+    #     'urdf',
+    #     urdf_file_name)
 
+    urdf_file_name = 'vehicle.urdf'
     urdf = os.path.join(
         get_package_share_directory('turtlebot3_ignition'),
         'urdf',
@@ -37,6 +43,10 @@ def generate_launch_description():
     doc = xacro.parse(open(urdf))
     xacro.process_doc(doc)
     params = {'robot_description': doc.toxml()}
+
+    # static_pub = Node(package="tf2_ros",
+    #                   executable="static_transform_publisher",
+    #                   arguments=["0", "0", "0", "0", "0", "0", "odom", "laser"])
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -49,5 +59,8 @@ def generate_launch_description():
             name='robot_state_publisher',
             output='screen',
             parameters=[{'use_sim_time': use_sim_time,
-                         'robot_description': doc.toxml()}]),
+                         'robot_description': doc.toxml(),
+                         'frame_prefix': "vehicle_blue/"
+                         },
+                        ]),
     ])

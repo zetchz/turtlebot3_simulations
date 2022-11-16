@@ -24,19 +24,53 @@ def generate_launch_description():
         package='ros_gz_bridge',
         executable='parameter_bridge',
         arguments=[
-            '/lidar@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan',
+            '/camera@sensor_msgs/msg/Image@gz.msgs.Image',
+            '/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
+            '/depth_camera@sensor_msgs/msg/Image@gz.msgs.Image',
+            '/depth_camera/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked',
             '/imu@sensor_msgs/msg/Imu@gz.msgs.IMU',
-            '/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist',
-            '/model/turtlebot3_burger/pose@geometry_msgs/msg/TransformStamped@gz.msgs.Pose',
+            '/lidar@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan',
+            '/lidar/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked',
+            '/model/vehicle_blue/odometry@nav_msgs/msg/Odometry@gz.msgs.Odometry',
+            'tf@tf2_msgs/msg/TFMessage@gz.msgs.Pose_V',
+            '/rgbd_camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
+            '/rgbd_camera/depth_image@sensor_msgs/msg/Image@gz.msgs.Image',
+            '/rgbd_camera/image@sensor_msgs/msg/Image@gz.msgs.Image',
+            '/rgbd_camera/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked',
+            '/thermal_camera@sensor_msgs/msg/Image@gz.msgs.Image',
+            '/model/vehicle_blue/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist',
+            '/clock@rosgraph_msgs/msg/Clock@gz.msgs.Clock',
         ],
-        # parameters=[{'use_sim_time': use_sim_time}],
+        remappings=[
+            ('/model/turtlebot3_burger/odometry', '/odom'),
+            ('/model/turtlebot3_burger/tf', '/tf'),
+        ],
+        parameters=[{'use_sim_time': True}],
         output='screen'
     )
 
+    # imu_frame = Node(
+    #     package='tf2_ros',
+    #     executable='static_transform_publisher',
+    #     arguments=[
+    #         "--frame-id", "turtlebot3_burger/imu_link", "--child-frame-id", "turtlebot3_burger/imu_link/imu_sensor"
+    #     ],
+    #     output='screen'
+    # )
+
+    # lidar_frame = Node(
+    #     package='tf2_ros',
+    #     executable='static_transform_publisher',
+    #     arguments=[
+    #         "--frame-id", "turtlebot3_burger/base_scan", "--child-frame-id", "turtlebot3_burger/base_scan/hls_lfcd_lds"
+    #     ],
+    #     output='screen'
+    # )
+
     return LaunchDescription([
         bridge,
-        # DeclareLaunchArgument(
-        #     'use_sim_time',
-        #     default_value='true',
-        #     description='Use simulation (Gazebo) clock if true'),
+        DeclareLaunchArgument(
+            'use_sim_time',
+            default_value='true',
+            description='Use simulation (Gazebo) clock if true'),
     ])

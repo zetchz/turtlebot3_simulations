@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<robot name="vehicle" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <link name='chassis'>
+        <pose>0 0 0 0 0 0</pose>
+    </link>
+
+    <link name='base_link'>
+        <pose>0 0 0 0 0 0</pose>
+    </link>
+    <joint name='base_link_joint' type='fixed'>
+        <parent link='chassis' />
+        <child link='base_link' />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name='left_wheel'>
+        <pose>0.05 0.025 0 -1.5707 0 0</pose>
+    </link>
+
+    <link name='right_wheel'>
+        <pose>0.05 -0.025 0 -1.5707 0 0</pose>
+    </link>
+
+    <joint name='left_wheel_joint' type='continuous'>
+        <parent link='base_link' />
+        <child link='left_wheel' />
+        <axis>
+            <xyz>0 0 1</xyz>
+        </axis>
+    </joint>
+    <joint name='right_wheel_joint' type='continuous'>
+        <parent link='base_link' />
+        <child link='right_wheel' />
+        <axis>
+            <xyz>0 0 1</xyz>
+        </axis>
+    </joint>
+
+    <link name='sensor'>
+        <pose>0 0 0.06 0 0 0</pose>
+    </link>
+    <joint name='sensor_joint' type='fixed'>
+        <parent link='base_link' />
+        <child link='sensor' />
+        <origin xyz="0 0 0.06" rpy="0 0 0" />
+    </joint>
+
+    <link name='sensor/camera'>
+        <pose>0 0 0.06 0 0 0</pose>
+    </link>
+    <joint name='camera_joint' type='fixed'>
+        <parent link='sensor' />
+        <child link='sensor/camera' />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name='sensor/depth_camera'>
+        <pose>0 0 0.06 0 0 0</pose>
+    </link>
+    <joint name='depth_camera_joint' type='fixed'>
+        <parent link='sensor' />
+        <child link='sensor/depth_camera' />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name='sensor/rgbd_camera'>
+        <pose>0 0 0.06 0 0 0</pose>
+    </link>
+    <joint name='rgbd_camera_joint' type='fixed'>
+        <parent link='sensor' />
+        <child link='sensor/rgbd_camera' />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name='sensor/thermal_camera'>
+        <pose>0 0 0.06 0 0 0</pose>
+    </link>
+    <joint name='thermal_camera_joint' type='fixed'>
+        <parent link='sensor' />
+        <child link='sensor/thermal_camera' />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name='sensor/gpu_lidar'>
+        <pose>0 0 0.06 0 0 0</pose>
+    </link>
+    <joint name='gpu_lidar_joint' type='fixed'>
+        <parent link='sensor' />
+        <child link='sensor/gpu_lidar' />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name='sensor/altimeter'>
+        <pose>0 0 0.06 0 0 0</pose>
+    </link>
+    <joint name='altimeter_joint' type='fixed'>
+        <parent link='sensor' />
+        <child link='sensor/altimeter' />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name='sensor/air_pressure'>
+        <pose>0 0 0.06 0 0 0</pose>
+    </link>
+    <joint name='air_pressure_joint' type='fixed'>
+        <parent link='sensor' />
+        <child link='sensor/air_pressure' />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name='sensor/imu'>
+        <pose>0 0 0.06 0 0 0</pose>
+    </link>
+    <joint name='imu_joint' type='fixed'>
+        <parent link='sensor' />
+        <child link='sensor/imu' />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name='sensor/magnetometer'>
+        <pose>0 0 0.06 0 0 0</pose>
+    </link>
+    <joint name='magnetometer_joint' type='fixed'>
+        <parent link='sensor' />
+        <child link='sensor/magnetometer' />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name='sensor/force_torque'>
+        <pose>0 0 0.06 0 0 0</pose>
+    </link>
+    <joint name='force_torque_joint' type='fixed'>
+        <parent link='sensor' />
+        <child link='sensor/force_torque' />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+</robot>
